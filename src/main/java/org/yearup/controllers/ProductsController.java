@@ -34,7 +34,14 @@ public class ProductsController
     {
         try
         {
-            return productDao.search(categoryId, minPrice, maxPrice, color);
+            // Check if any of the filters are present
+            if (categoryId != null || minPrice != null || maxPrice != null || color != null) {
+                // Pass the filters to the productDao.search method
+                return productDao.search(categoryId, minPrice, maxPrice, color);
+            } else {
+                // If no filters are specified, retrieve all products
+                return productDao.getAllProducts();
+            }
         }
         catch(Exception ex)
         {
@@ -77,14 +84,20 @@ public class ProductsController
 
     @PutMapping("{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void updateProduct(@PathVariable int id, @RequestBody Product product)
-    {
-        try
-        {
-            productDao.create(product);
-        }
-        catch(Exception ex)
-        {
+    public void updateProduct(@PathVariable int id, @RequestBody Product updatedProduct) {
+        try {
+            var existingProduct = productDao.getById(id);
+
+            if (existingProduct == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            }
+
+            // Update the attributes of the existing product with the new values
+            existingProduct.setPrice(updatedProduct.getPrice());
+            existingProduct.setDescription(updatedProduct.getDescription());
+
+            productDao.update(existingProduct);
+        } catch(Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
