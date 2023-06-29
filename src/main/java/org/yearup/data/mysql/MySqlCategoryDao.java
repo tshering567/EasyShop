@@ -21,27 +21,25 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
     }
 
     @Override
-    public List<Category> getAllCategories()
-    {
+    public List<Category> getAllCategories() {
         List<Category> categories = new ArrayList<>();
         // get all categories
         String query = "SELECT * FROM categories";
-       try( Connection connection = getConnection();
-        PreparedStatement statement = connection.prepareStatement(query);
-        ResultSet resultSet = statement.executeQuery()){
-            while(resultSet.next()){
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
                 Category category = mapRow(resultSet);
                 categories.add(category);
             }
-       } catch (SQLException e) {
-           e.printStackTrace();
-       }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return categories;
     }
 
     @Override
-    public Category getById(int categoryId)
-    {
+    public Category getById(int categoryId) {
         String query = "SELECT * FROM categories WHERE category_id = ?";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -56,6 +54,8 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
         }
         return null;
     }
+
+
 
     @Override
     public ResponseEntity<Category> create(Category category) {
@@ -81,8 +81,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
 
 
     @Override
-    public void update(int categoryId, Category category)
-    {
+    public void update(int categoryId, Category category) {
         // update category
         String query = "UPDATE categories SET name = ?, description = ? WHERE category_id = ?";
         try (Connection connection = getConnection();
@@ -97,8 +96,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
     }
 
     @Override
-    public void delete(int categoryId)
-    {
+    public void delete(int categoryId) {
         // delete category
         String query = "DELETE FROM categories WHERE category_id = ?";
         try (Connection connection = getConnection();
@@ -106,7 +104,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
             statement.setInt(1, categoryId);
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

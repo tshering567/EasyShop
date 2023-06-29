@@ -11,6 +11,7 @@ import org.yearup.data.ProductDao;
 import org.yearup.models.Category;
 import org.yearup.models.Product;
 
+import java.nio.channels.ScatteringByteChannel;
 import java.util.List;
 
 
@@ -88,11 +89,21 @@ public class CategoriesController
 
 
     // add annotation to call this method for a DELETE action - the url path must include the categoryId
-    @DeleteMapping
+    @DeleteMapping("/{id}")
+   @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ROLE_ADMIN')")// add annotation to ensure that only an ADMIN can call this function
-    public void deleteCategory(@PathVariable int id)
+    public void deleteCategory(@PathVariable  int id)
     {
-        // delete the category by id
-        categoryDao.delete(id);
+        try{
+            Category existingCategory = categoryDao.getById(id);
+            if(existingCategory == null){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            }
+            categoryDao.delete(id);
+        }  catch (Exception ex){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
     }
 }
