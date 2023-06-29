@@ -1,5 +1,7 @@
 package org.yearup.data.mysql;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.yearup.data.CategoryDao;
 import org.yearup.models.Category;
@@ -56,8 +58,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
     }
 
     @Override
-    public Category create(Category category)
-    {
+    public ResponseEntity<Category> create(Category category) {
         // create a new category
         String query = "INSERT INTO categories (name, description) VALUES (?, ?)";
         try (Connection connection = getConnection();
@@ -69,15 +70,15 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
                 if (resultSet.next()) {
                     int generatedId = resultSet.getInt(1);
                     category.setCategoryId(generatedId);
-                    return category;
+                    return new ResponseEntity<>(category, HttpStatus.CREATED);
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException();
         }
-        return null;
-
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
 
     @Override
     public void update(int categoryId, Category category)
