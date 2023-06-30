@@ -37,6 +37,7 @@ data storage. The existing code includes an 'AuthenticationController' class for
 "password":"password"\
 }
 * Successful login response includes a JWT authentication token.
+![](C:\LearnToCode_Capstones\token.png)
 
 ## Phase 1 - CategoriesController
 The CategoriesController class and the corresponding MySqglCategoriesDao have been created but require implementation
