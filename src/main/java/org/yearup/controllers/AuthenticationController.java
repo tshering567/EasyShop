@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -70,13 +71,13 @@ public class AuthenticationController {
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<User> register(@Valid @RequestBody RegisterUserDto newUser) {
 
-        try
-        {
-            boolean exists = userDao.exists(newUser.getUsername());
+         boolean exists = userDao.exists(newUser.getUsername());
             if (exists)
             {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User Already Exists.");
+                throw new ResponseStatusException(HttpStatus.CREATED, "User Already Exists.");
             }
+            try
+            {
 
             // create user
             User user = userDao.create(new User(0, newUser.getUsername(), newUser.getPassword(), newUser.getRole()));
@@ -92,7 +93,4 @@ public class AuthenticationController {
         {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
-    }
-
-}
-
+    }}
