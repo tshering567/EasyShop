@@ -90,8 +90,7 @@ public class ProductsController
 
             if (existingProduct == null) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-            }
-
+            } //if the product doesn't exist a status code 404 is thrown
             // Update the attributes of the existing product with the new values
             existingProduct.setPrice(updatedProduct.getPrice());
             existingProduct.setDescription(updatedProduct.getDescription());

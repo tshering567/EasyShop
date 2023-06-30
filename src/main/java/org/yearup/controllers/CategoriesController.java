@@ -69,7 +69,7 @@ public class CategoriesController
 
     // add annotation to call this method for a POST action
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.CREATED) //add a response status
     @PreAuthorize("hasRole('ROLE_ADMIN')")// add annotation to ensure that only an ADMIN can call this function
     public ResponseEntity<Category> addCategory(@RequestBody Category category)
     {
@@ -94,7 +94,8 @@ public class CategoriesController
 
     // add annotation to call this method for a DELETE action - the url path must include the categoryId
     @DeleteMapping("/{id}")
-   @ResponseStatus(HttpStatus.NO_CONTENT)
+   @ResponseStatus(HttpStatus.NO_CONTENT) //This annotation sets the HTTP response status code to 204(NO_CONTENT)
+    //when the deletion is successful.
     @PreAuthorize("hasRole('ROLE_ADMIN')")// add annotation to ensure that only an ADMIN can call this function
     public void deleteCategory(@PathVariable  int id)
     {
@@ -103,9 +104,10 @@ public class CategoriesController
             if(existingCategory == null){
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
             }
-            categoryDao.delete(id);
+            categoryDao.delete(id); // calling a method to delete the category from the database.
         }  catch (Exception ex){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR); // Status code 500 is thrown if any
+            //if any exception occurs during the deletion process
         }
 
 

@@ -67,10 +67,12 @@ public class AuthenticationController {
         }
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.CREATED) //This annotation sets the HTTP response status code to 201 Created.
+    // It indicates that a new resource has been successfully created.
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<User> register(@Valid @RequestBody RegisterUserDto newUser) {
-
+  // using ResponseEntity<User> allows you to have  control over the HTTP response,
+        // including the status code and the content of the response body.
          boolean exists = userDao.exists(newUser.getUsername());
             if (exists)
             {
